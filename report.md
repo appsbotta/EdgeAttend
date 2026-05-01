@@ -122,16 +122,15 @@ a `report.md` file with the following sections:
 
 **BCEWithLogitsLoss Formula**:
 
-$L(y, \hat{z}) = -\left[ \text{pos\_weight} \cdot y \cdot \log(\sigma(\hat{z})) + (1-y) \cdot \log(1-\sigma(\hat{z})) \right]$
+$$L(y, \hat{z}) = -\left[ w_+ \cdot y \cdot \log(\sigma(\hat{z})) + (1-y) \cdot \log(1-\sigma(\hat{z})) \right]$$
 
 Where:
-- $\sigma(\hat{z}) = \frac{1}{1 + e^{-\hat{z}}}$ is the sigmoid function
+- $\sigma(\hat{z}) = \frac{1}{1 + e^{-\hat{z}}}$ is the sigmoid function (probability output)
 - $y \in \{0, 1\}$ is the true label
-- $\hat{z}$ is the raw logit output (pre-sigmoid)
-- $\text{pos\_weight} = \frac{\text{neg\_count}}{\text{pos\_count}}$ is the class weighting factor
+- $\hat{z}$ is the raw logit output from the model (pre-sigmoid)
+- $w_+ = \frac{n_{neg}}{n_{pos}}$ is the positive class weight (neg_count / pos_count)
 
 This loss function addresses class imbalance by upweighting the positive class (attentive) during backpropagation. The pos_weight factor scales the loss contribution of positive samples, giving them higher importance during training.
-
 ### Two-Stage Training Strategy
 
 #### Stage 1: Head-Only Training (10 epochs)
