@@ -36,7 +36,7 @@ dataset/
     └── ...
 ```
 
-## Model Training Pipeline
+# Model Training Pipeline
 
 ### Configuration
 
