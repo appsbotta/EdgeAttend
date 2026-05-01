@@ -10,9 +10,9 @@ This project addresses the critical need for **real-time, privacy-preserving att
 
 ### Key Project Objectives
 
-- **Develop a real-time edge AI system** that detects participant attentiveness locally on client devices with <22 ms per-frame latency and <200 ms end-to-end latency
+- **Develop a real-time edge AI system** that detects participant attentiveness locally on client devices with < ~25 ms per-frame latency and <200 ms end-to-end latency
 - **Achieve high accuracy** on binary attentiveness classification (attentive vs. non-attentive) while maintaining perfect recall (zero missed detections) to minimize false negatives
-- **Compress the model ** using INT8 quantization and explore pruning trade-offs to ensure deployment on standard CPUs without GPU requirements
+- **Compress the model** using INT8 quantization and explore pruning trade-offs to ensure deployment on standard CPUs without GPU requirements
 - **Design a multi-threaded server-client architecture** supporting 8+ concurrent clients with centralized grid visualization, enabling distributed meeting room monitoring without cloud backend
 - **Implement privacy-by-design principles** ensuring all inference occurs locally on client devices; server aggregates only mood metadata, never accessing raw video or model parameters
 
