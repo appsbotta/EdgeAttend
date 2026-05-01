@@ -11,13 +11,13 @@ EdgeAttend detects whether each participant in a video call is attentive or not,
 - [System Architecture](#system-architecture)
 - [Prerequisites](#prerequisites)
 - [Step-by-Step: Reproduce the Project](#step-by-step-reproduce-the-project)
-  - [1 - Install dependencies](#1--install-dependencies)
-  - [2 - Download the dataset](#2--download-the-dataset)
-  - [3 - Prepare the dataset](#3--prepare-the-dataset)
-  - [4 - Train the model](#4--train-the-model)
-  - [5 - Compress the model](#5--compress-the-model)
-  - [6 - Evaluate compressed models](#6--evaluate-compressed-models)
-  - [7 - Run the live system](#7--run-the-live-system)
+  - [1 - Install dependencies](#1---install-dependencies)
+  - [2 - Download the dataset](#2---download-the-dataset)
+  - [3 - Prepare the dataset](#3---prepare-the-dataset)
+  - [4 - Train the model](#4---train-the-model)
+  - [5 - Compress the model](#5---compress-the-model)
+  - [6 - Evaluate compressed models](#6---evaluate-compressed-models)
+  - [7 - Run the live system](#7---run-the-live-system)
 ## Project Structure
 
 ```
