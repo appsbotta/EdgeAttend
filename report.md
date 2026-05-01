@@ -598,11 +598,21 @@ To reduce prediction noise from single-frame inference:
 ---
 
 ## 8. System Prototype (Pictures / Figures)
-- Include images of:
-  - hardware setup  
-  - working prototype  
-  - screenshots of outputs (if applicable)  
+ 
+### Hardware Setup - Laptop(Multiple for server and clients)
+ 
+### Working Prototype
+## https://
 
+### Screenshots of outputs
+
+![Unstructured pruning trade-off](plots/unstructured_pruning_tradeoff_graph.png)
+
+![Unstructured pruning trade-off](plots/unstructured_pruning_tradeoff_graph.png)
+
+![Unstructured pruning trade-off](plots/unstructured_pruning_tradeoff_graph.png)
+
+![Unstructured pruning trade-off](plots/unstructured_pruning_tradeoff_graph.png)
 ---
 
 ## 9. Conclusions & Limitations
