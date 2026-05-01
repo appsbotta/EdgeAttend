@@ -9,13 +9,13 @@ A complete pipeline for training, compressing, and evaluating a binary attention
 #### Step - 2: Quantization
 Open and run `quantize_model.py`
 
-#### Step - 2: Structured Prunning
+#### Step - 3: Structured Prunning
 Open and run `struct_prune_model.py`
 
-#### Step - 2: Unstructured Prunning
+#### Step - 4: Unstructured Prunning
 Open and run `prune_model.py`
 
-#### Step - 2: Evaluation
+#### Step - 5: Evaluation
 Open and run `evaluate_model.py`
 
 
