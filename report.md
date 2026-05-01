@@ -122,7 +122,7 @@ a `report.md` file with the following sections:
 
 **BCEWithLogitsLoss Formula**:
 
-$$L(y, \hat{z}) = -\left[ \text{pos\_weight} \cdot y \cdot \log(\sigma(\hat{z})) + (1-y) \cdot \log(1-\sigma(\hat{z})) \right]$$
+$L(y, \hat{z}) = -\left[ \text{pos\_weight} \cdot y \cdot \log(\sigma(\hat{z})) + (1-y) \cdot \log(1-\sigma(\hat{z})) \right]$
 
 Where:
 - $\sigma(\hat{z}) = \frac{1}{1 + e^{-\hat{z}}}$ is the sigmoid function
