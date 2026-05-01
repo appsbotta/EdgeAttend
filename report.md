@@ -259,8 +259,6 @@ True   Attentive   TP   |      FN
 - Unstructured L1 pruning with and without fine-tuning
 - Structural (channel) pruning with and without fine-tuning
 
-### Report
-
 The compression stage was implemented through three paths in this folder:
 
 - Quantization: converts the trained FP32 model to INT8 using FX graph mode quantization and a calibration subset from the training split.
@@ -359,7 +357,7 @@ The graph shows a sharper dependency on fine-tuning for structural pruning as we
 - Both pruning methods clearly benefit from fine-tuning; without it, accuracy falls sharply.
 - If the deployment target is a mobile CPU or embedded device, quantization is the most practical choice from this project.
 
-### Conclusion
+### Results from model compression
 
 Among the compression methods tested, **INT8 quantization is the best choice overall**. It keeps accuracy almost identical to the FP32 baseline while delivering a large reduction in model size and a clear latency improvement during inference. The pruned models are useful as research comparisons, and structural pruning is attractive when memory is extremely limited, but for this project quantization provides the strongest balance of accuracy, compression, and runtime efficiency.
 
