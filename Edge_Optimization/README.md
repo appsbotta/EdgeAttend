@@ -1,10 +1,10 @@
-# AttentiveMobileNetV2 — Model Compression Pipeline
+# Model Compression Pipeline (Edge Optimization)
 
-A complete pipeline for training, compressing, and evaluating a binary attention classifier built on MobileNetV2. The pipeline covers **Post-Training Static Quantization**, **Unstructured (L1) Pruning**, and **Structural (Channel) Pruning**, along with a unified evaluation script to benchmark all compressed variants head-to-head.
+This pipeline covers **Post-Training Static Quantization**, **Unstructured Pruning**, and **Structural Pruning**, along with a unified evaluation script to benchmark all compressed variants.
 
 ---
 
-##  Before You Begin — Update Paths
+##  Update Paths
 
 Before running any script, open each file and update the dataset and model weight paths to match your local setup. Also modify the dataset_splits.json file for exact file paths or run the prepare dataset file in this folder.
 
