@@ -11,8 +11,8 @@ This project addresses the critical need for **real-time, privacy-preserving att
 ### Key Project Objectives
 
 - **Develop a real-time edge AI system** that detects participant attentiveness locally on client devices with <22 ms per-frame latency and <200 ms end-to-end latency
-- **Achieve ≥97% accuracy** on binary attentiveness classification (attentive vs. non-attentive) while maintaining perfect recall (zero missed detections) to minimize false negatives
-- **Compress the model from 9 MB to <3 MB** using INT8 quantization and explore pruning trade-offs to ensure deployment on standard CPUs without GPU requirements
+- **Achieve high accuracy** on binary attentiveness classification (attentive vs. non-attentive) while maintaining perfect recall (zero missed detections) to minimize false negatives
+- **Compress the model ** using INT8 quantization and explore pruning trade-offs to ensure deployment on standard CPUs without GPU requirements
 - **Design a multi-threaded server-client architecture** supporting 8+ concurrent clients with centralized grid visualization, enabling distributed meeting room monitoring without cloud backend
 - **Implement privacy-by-design principles** ensuring all inference occurs locally on client devices; server aggregates only mood metadata, never accessing raw video or model parameters
 
@@ -106,7 +106,7 @@ The proposed solution implements a **distributed edge AI system** for real-time 
 
 #### Server Machine (Host)
 - **Processor**: Intel/AMD x86-64 CPU (2+ cores minimum; 4+ cores recommended for 8+ clients)
-- **Memory**: 4 GB base + 100 MB per connected client
+- **Memory**: 4 GB base 
 - **Storage**: 100 MB free disk space
 - **Network**: Ethernet or Wi-Fi (stable connection essential)
 - **Display**: Monitor or headless operation (MJPEG server serves browser remote monitoring)
@@ -469,6 +469,8 @@ Among the compression methods tested, **INT8 quantization is the best choice ove
 
 ---
 
+## 7. Model Deployment & On-Device Performance
+
 ### Deployment Architecture Overview
 
 The attentiveness detection system employs a **distributed edge AI architecture** where inference is performed locally on client devices, eliminating the need for cloud communication while maintaining real-time responsiveness. The deployment follows a server-client topology optimized for low-latency, privacy-preserving on-device execution.
@@ -606,13 +608,13 @@ To reduce prediction noise from single-frame inference:
 
 ### Screenshots of outputs
 
-![Unstructured pruning trade-off](plots/all_attentive.png)
+![all_attentive](plots/all_attentive.png)
 
-![Unstructured pruning trade-off](plots/all_non_attentive.png)
+![all_non_attentive](plots/all_non_attentive.png)
 
-![Unstructured pruning trade-off](plots/one_non_attentive.png)
+![one_non_attentive](plots/one_non_attentive.png)
 
-![Unstructured pruning trade-off](plots/two_attentive.png)
+![two_attentive](plots/two_attentive.png)
 
 ---
 
@@ -634,14 +636,13 @@ This project successfully demonstrates a **practical edge AI system for real-tim
 - **Per-frame inference time of 21.7 ms**, supporting 3 FPS effective inference rate with batch smoothing
 
 #### System Deployment
-- **Multi-threaded server-client architecture** successfully handles 8+ concurrent clients with < 5 ms grid assembly latency
 - **End-to-end latency of 170–200 ms**, imperceptible to users and suitable for real-time monitoring
 - **Network efficiency**: ~1 Mbps per client (800 Kbps outgoing, 200 Kbps incoming)
 - **Batch inference smoothing** reduces noise and false positives through 5-frame averaging
 - **Graceful fallback mechanisms** for model loading failures, network disconnects, and hardware unavailability
 
 #### Privacy & Edge Computing
-- **All inference performed locally on client devices**—no model or raw video frames sent to cloud
+- **All inference performed locally on client devices**—no model or raw video frames sent to cloud (Edge Computing)
 - **Server aggregates only metadata** (mood labels, scores) for visualization
 - **Eliminates dependency on cloud infrastructure**, reducing latency and privacy concerns
 
@@ -660,8 +661,6 @@ This project successfully demonstrates a **practical edge AI system for real-tim
 #### Deployment Limitations  
 1. **Webcam Quality** – Assumes modern USB cameras; older hardware may cause frame drops
 2. **Network Dependency** – Requires stable 1 Mbps; high latency (>500ms) causes perceptible delays
-3. **Server Scalability** – Tested only with 8+ clients; bottleneck at 20+ clients on single machine
-4. **Hardware Requirements** – Needs 8GB RAM, x86-64 CPU; unsuitable for Raspberry Pi or microcontrollers
 
 #### Practical Constraints
 1. **No Temporal Modeling** – Each frame independent; no RNN/Markov chain for sequential context
@@ -684,19 +683,7 @@ Another important extension is the integration of multimodal inputs, such as eye
 
 ### Data & Preprocessing Challenges
 
-#### Challenge 1: Limited Dataset Size (10,000 samples)
-**Problem**: DAiSEE dataset constrained to 10,000 face images; deep learning models typically benefit from 100k+ samples.
-
-**Impact**: Risk of overfitting, poor generalization to unseen demographics or environments.
-
-**Mitigation Strategy**:
-- Employed **transfer learning with ImageNet-pretrained MobileNetV2** backbone to leverage 1M+ labeled image knowledge
-- Applied **aggressive data augmentation** (horizontal flip, rotation, affine, color jitter) during training
-- Used **stratified train/val/test split** (70/15/15) with fixed seed to maximize training data while preserving distribution
-- Implemented **early stopping** with patience=4 to prevent overfitting despite limited data
-- Froze backbone during Stage 1 training to reduce effective parameter count and regularize learning
-
-#### Challenge 2: Class Imbalance in Original Dataset
+#### Challenge 1: Class Imbalance in Original Dataset
 **Problem**: Raw DAiSEE label distribution skewed (e.g., 60% attentive vs. 40% non-attentive).
 
 **Impact**: Model biased toward majority class, leading to low recall on minority class.
@@ -707,7 +694,7 @@ Another important extension is the integration of multimodal inputs, such as eye
 - Monitored **recall and precision separately** during training, not just accuracy
 - Achieved **perfect 100% recall on test set** (zero false negatives) and high 96.53% specificity
 
-#### Challenge 3: Face Detection Preprocessing
+#### Challenge 2: Face Detection Preprocessing
 **Problem**: Not all video frames contain detectable faces (occlusion, extreme angles, poor lighting).
 
 **Impact**: Training pipeline would fail or produce incomplete dataset if face detection was brittle.
@@ -723,7 +710,7 @@ Another important extension is the integration of multimodal inputs, such as eye
 
 ### Model Architecture & Training Challenges
 
-#### Challenge 4: Balancing Model Size vs. Accuracy
+#### Challenge 3: Balancing Model Size vs. Accuracy
 **Problem**: Standard ResNet-50 or EfficientNet models (50–100 MB) too large for edge deployment; simpler CNNs (< 1 MB) sacrifice accuracy.
 
 **Impact**: No clear path from research-grade model to practical edge system.
@@ -740,21 +727,10 @@ Another important extension is the integration of multimodal inputs, such as eye
 - Frozen BatchNorm during fine-tuning to preserve ImageNet statistics
 - Result: **98.53% accuracy with only 2.3 M parameters** (viable for edge)
 
-#### Challenge 5: Overfitting on Small Dataset
-**Problem**: 7,000 training samples insufficient for training 2.3 M parameter model from scratch.
-
-**Impact**: Without regularization, model would memorize training set and fail on test set.
-
-**Mitigation Strategy**:
-- Applied **aggressive dropout** in custom head (0.35 and 0.25 in two layers)
-- Utilized **transfer learning** to reduce effective learning problem to binary classification on top of learned features
-- Implemented **learning rate scheduling** (ReduceLROnPlateau) to adapt learning rate when validation plateaued
-- Used **early stopping** with patience=4 epochs to halt training before performance degraded
-- Achieved **98.27% test accuracy**, only 0.26% below validation accuracy—minimal overfitting
 
 ### Model Compression & Optimization Challenges
 
-#### Challenge 6: Inference Latency Too High for Real-Time Deployment
+#### Challenge 4: Inference Latency Too High for Real-Time Deployment
 **Problem**: Original FP32 model required 11.07 seconds to run inference on 150 test frames (~74 ms/frame); unacceptable for 15 FPS frame capture.
 
 **Impact**: Could not deploy on standard consumer hardware; required high-end GPUs or edge TPUs.
@@ -771,102 +747,6 @@ Another important extension is the integration of multimodal inputs, such as eye
 - Used **qnnpack backend** optimized for ARM/mobile CPUs
 - Calibration subset extracted from training split to estimate activation ranges
 - Result: **Deployment viable on standard CPU**, no GPU required
-
-### Real-Time System Architecture Challenges
-
-#### Challenge 7: Concurrent Client Management
-**Problem**: Naive sequential processing of multiple client streams causes cascading delays and client timeouts.
-
-**Impact**: Adding more clients linearly increases latency; system breaks at 5–10 clients.
-
-**Mitigation Strategy**:
-- Implemented **multi-threaded server architecture**:
-  - One `ClientHandler` thread per connected client
-  - Each thread independently reads from its client socket (no global blocking)
-  - Shared state (client registry, grid images) protected by locks
-- **Background threads for non-blocking operations**:
-  - Grid encoder: Runs at 8 FPS, rebuilds annotated/clean grids asynchronously
-  - Grid pusher: Broadcasts clean grid to all clients without blocking frame reads
-  - Server webcam: Continuously captures frames, updated atomically
-- Used **threading.Lock()** for critical sections (avoiding deadlocks through consistent lock ordering)
-- Tested successfully with 8+ concurrent clients with <5 ms grid assembly time
-
-#### Challenge 8: Synchronizing Multiple Data Streams
-**Problem**: Server receives three async streams (frames, moods, control messages) from each client; must combine into coherent grid display.
-
-**Impact**: Race conditions, stale data, inconsistent mood labels if synchronization poor.
-
-**Mitigation Strategy**:
-- Implemented **typed message protocol** (5-byte header: 1 byte type + 4 bytes length):
-  - MSG_FRAME: Raw JPEG frames from client camera
-  - MSG_ATTN: Batch inference result (label:score)
-  - MSG_GRID: Server broadcasts annotated grid
-  - MSG_MOOD: Client metadata updates
-- Per-client state atomically updated upon receiving each message type
-- Grid assembly samples **latest available data** from each client (no waiting for all data):
-  - If frame available, use it; else show black tile with "Connecting..."
-  - Use latest mood label and score
-- Timestamps tracked for stale data detection (not removed if recent, >5s old flagged as potentially disconnected)
-- Result: **Robust to intermittent network jitter**; no blocking operations
-
-#### Challenge 9: Batch Inference Scheduling
-**Problem**: Inference takes 50–65 ms per frame; cannot run on every frame at 15 FPS without blocking.
-
-**Impact**: Either drop frames (poor responsiveness) or introduce significant latency.
-
-**Mitigation Strategy**:
-- **Deferred batch inference** (INFER_EVERY_N=5):
-  - Frames 1–4: Captured and buffered, no inference
-  - Frame 5: Run batch inference on all 5 frames (~220 ms total for 5×45ms per frame)
-  - Average scores across 5 frames to produce final mood label
-- Sender thread continues capturing even during inference (non-blocking)
-- Frame buffer implemented as `deque(maxlen=BATCH_SIZE)` with atomic append
-- Result: **3 FPS effective inference rate** with **smoothed predictions** (reduced false positives from noisy single frames)
-
-### Hardware & Network Challenges
-
-#### Challenge 10: Webcam Availability & Initialization
-**Problem**: Not all systems have accessible webcams; initialization timing varies across hardware.
-
-**Impact**: Client startup fails if webcam unavailable; no graceful fallback.
-
-**Mitigation Strategy**:
-- Implemented **multi-backend camera opening** with fallback:
-  - Prefer DirectShow backend on Windows (cv2.CAP_DSHOW)
-  - Fall back to OpenCV default (cv2.CAP_ANY) if DirectShow fails
-- Set camera properties (FPS, resolution, buffer size) but **ignore failures**:
-  - If setting MJPG codec fails, continue with default codec
-  - Worst case: RGB stream at lower FPS, still usable
-- Client gracefully starts even if no camera, displays "Connecting..." placeholder
-- Server shows blank tile for hosts without cameras, continues serving other clients
-- Result: **Robust to heterogeneous hardware**; client still functional without camera
-
-#### Challenge 11: Network Latency & Disconnects
-**Problem**: TCP connections drop unexpectedly; no automatic reconnection or buffering.
-
-**Impact**: Single network glitch disconnects entire client; user must manually restart.
-
-**Mitigation Strategy**:
-- Enabled **TCP keep-alive** on all sockets:
-  - `socket.setsockopt(socket.SOL_SOCKET, socket.SO_KEEPALIVE, 1)`
-  - OS-level heartbeat detects dead connections within seconds
-- Implemented **exception handling** in sender/receiver threads:
-  - Catch `OSError, BrokenPipeError, ConnectionError`
-  - Set `_stop` event to halt all threads gracefully
-  - Log error message but don't crash client process
-- Server-side `ClientHandler` cleans up connection state upon disconnect:
-  - Removes client from registry
-  - Logs disconnection time and reason
-  - No orphaned threads or socket handles
-- Result: **Graceful degradation** on network issues; clean recovery on reconnect
-
-### Debugging & Testing Challenges (Maintained)
-
-#### Challenge 12–14: Multi-threaded Debugging, Inference Variability, Limited Test Set
-*(Refer to full section 11.6 above for comprehensive mitigation strategies)*
-
-**Summary**: Comprehensive logging, adaptive frame skipping, latency distributions, and stratified evaluation ensure robust production-ready system despite inherent complexity of multi-threaded distributed inference.
-
 
 ---
 
