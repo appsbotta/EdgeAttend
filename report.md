@@ -252,13 +252,116 @@ True   Attentive   TP   |      FN
 ---
 
 ## 6. Model Compression & Efficiency Metrics
-- Techniques used:
-  - pruning, quantization, distillation (if applicable)  
-- Report:
-  - model size  
-  - inference latency  
-  - memory usage (RAM/Flash)  
-  - any trade-offs observed  
+
+### Techniques used
+
+- Post-training static quantization
+- Unstructured L1 pruning with and without fine-tuning
+- Structural (channel) pruning with and without fine-tuning
+
+### Report
+
+The compression stage was implemented through three paths in this folder:
+
+- Quantization: converts the trained FP32 model to INT8 using FX graph mode quantization and a calibration subset from the training split.
+- Unstructured pruning: applies L1 unstructured pruning across convolutional and linear layers, then evaluates accuracy trade-offs with and without fine-tuning.
+- Structural pruning: performs structural pruning using torch-pruning so that channels and filters are physically removed from the network, again evaluated with and without fine-tuning.
+
+#### Experimental setup
+
+- Input resolution: 160 x 160
+- Validation split: held-out validation files from `dataset_splits.json`
+- Device for compression evaluation: CPU
+- Baseline model: FP32 `attentive_model.pth`
+
+#### Comparison summary
+
+| Model variant | Accuracy | Inference metric | Model size | Parameters | Remark |
+| --- | ---: | ---: | ---: | ---: | --- |
+| Original FP32 | 98.53% | 22.68 ms per image | 9.02 MB | 2,305,921 | Baseline reference |
+| Quantized INT8 | 98.47% | 5.87 ms per image | 2.57 MB | 0 in TorchScript export | Best overall deployment balance |
+| Unstructured pruned, no fine-tuning | 78.53% | 9.85 s total CPU eval time | 9.04 MB | 2,305,921 | Large accuracy loss without recovery training |
+| Unstructured pruned, with fine-tuning | 98.40% | 7.76 s total CPU eval time | 9.04 MB | 2,305,921 | Accuracy recovered, but storage savings remain weak |
+| Structurally pruned, no fine-tuning | 50.00% | 2.50 s total CPU eval time | 0.27 MB | 30,477 | Extreme compression, but accuracy collapses without recovery training |
+| Structurally pruned, with fine-tuning | 97.47% | 2.71 s total CPU eval time | 0.27 MB | 30,477 | Strong compression with a small accuracy drop |
+
+Note: the scripts do not directly profile RAM usage, so model file size is used as the main flash/storage proxy. For edge devices, INT8 quantization also lowers runtime memory bandwidth because activations and weights are represented with 8-bit integers instead of 32-bit floating point values.
+
+#### Technique-wise findings
+
+**1. Post-training static quantization**
+
+The quantization script uses FX graph mode with the `qnnpack` backend, which is well suited for ARM/mobile CPUs. A small calibration subset is passed through the model to estimate activation ranges before conversion to INT8.
+
+Observed result:
+
+- Accuracy: 98.47%
+- Model size: 2.57 MB
+- Latency: 5.87 ms per image
+
+This is the strongest edge-deployment result in the project. The accuracy drop relative to the FP32 baseline is only about 0.06 percentage points, while the model becomes about 3.5x smaller and roughly 4x faster at inference.
+
+**2. Unstructured L1 pruning**
+
+The unstructured pruning script removes small-magnitude weights from convolutional and linear layers and evaluates the model both before and after fine-tuning. The no-fine-tuning result shows a major accuracy drop, which confirms that sparse masks alone are not enough to preserve the trained decision boundary. Fine-tuning restores performance close to the original baseline.
+
+Observed result without fine-tuning:
+
+- Accuracy: 78.53%
+- Total evaluation time: 9.85 s
+- Model size: 9.04 MB
+
+Observed result with fine-tuning:
+
+- Accuracy: 98.40%
+- Total evaluation time: 7.76 s
+- Model size: 9.04 MB
+
+Although the accuracy stays high after fine-tuning, the model file size remains close to the FP32 baseline because the sparsity pattern is not converted into a compact sparse storage format in this pipeline. In practice, this means unstructured pruning does not provide the same deployment benefit as quantization or structural pruning unless the runtime is sparse-aware.
+
+**3. Structural pruning**
+
+The structural pruning script physically removes channels and filters. This reduces the actual network shape, which is why the final model is much smaller than the baseline. The no-fine-tuning result shows that architecture shrinkage alone is not enough; recovery training is still needed to regain usable accuracy.
+
+Observed result without fine-tuning:
+
+- Accuracy: 50.00%
+- Total evaluation time: 2.50 s
+- Model size: 0.27 MB
+
+Observed result with fine-tuning:
+
+- Accuracy: 97.47%
+- Total evaluation time: 2.71 s
+- Model size: 0.27 MB
+
+Structural pruning gives the smallest model footprint in the project, but it loses more accuracy than quantization and does not beat INT8 quantization on latency. It is still useful when the strictest memory budget matters more than raw speed.
+
+#### Graphs and Onbservations
+
+#### Unstructured pruning trade-off
+
+![Unstructured pruning trade-off](plots/unstructured_pruning_tradeoff_graph.png)
+
+The graph shows that pruning without fine-tuning quickly collapses validation accuracy, especially after the 30% pruning range. Fine-tuning keeps the curve close to the baseline, which confirms that recovery training is necessary for this technique.
+
+#### Structural pruning trade-off
+
+![Structural pruning trade-off](plots/struct_pruning_tradeoff_graph.png)
+
+The graph shows a sharper dependency on fine-tuning for structural pruning as well. Without recovery training, the model can fall close to chance performance at heavier pruning ratios. With fine-tuning, accuracy remains high across the tested ratios, but the best deployment benefit still depends on whether the application prioritizes size or speed.
+
+#### Trade-offs observed
+
+- Quantization gives the best overall edge deployment balance: nearly unchanged accuracy, much smaller storage, and the lowest latency.
+- Structural pruning gives the strongest compression in terms of model file size, but it introduces a larger accuracy drop than quantization.
+- Unstructured pruning preserves accuracy after fine-tuning, but this implementation does not translate sparsity into real file-size or latency savings.
+- Both pruning methods clearly benefit from fine-tuning; without it, accuracy falls sharply.
+- If the deployment target is a mobile CPU or embedded device, quantization is the most practical choice from this project.
+
+### Conclusion
+
+Among the compression methods tested, **INT8 quantization is the best choice overall**. It keeps accuracy almost identical to the FP32 baseline while delivering a large reduction in model size and a clear latency improvement during inference. The pruned models are useful as research comparisons, and structural pruning is attractive when memory is extremely limited, but for this project quantization provides the strongest balance of accuracy, compression, and runtime efficiency.
 
 ---
 
