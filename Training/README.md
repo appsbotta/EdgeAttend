@@ -87,15 +87,12 @@ python prepare_dataset.py
 ```
 **Prerequisites**: 
 - DAiSEE dataset directory structure in place
-- OpenCV installed (`pip install opencv-python`)
 
 **Output**: Balanced dataset in `dataset/` directory
 
 ### Step 2: Model Training
 Open and run `train.ipynb` sequentially
-**Prerequisites**:
-- PyTorch with CUDA support (optional, CPU works)
-- scikit-learn, PIL, matplotlib installed
+
 
 
 ## References
