@@ -51,24 +51,13 @@ models_to_eval = [
 
 ---
 
-
-## Installation
-
-```bash
-pip install torch torchvision scikit-learn tqdm pillow matplotlib torch-pruning
-```
-
-> **Note:** `torch-pruning` is required only for `struct_prune_model.py`.
-
----
-
 ## Execution Order
 
 Run the scripts in the following order. Each step depends on outputs from the previous one.
 
 ---
 
-### Step 1 — Unstructured Pruning &nbsp;`prune_model.py`
+### Step 1 - Unstructured Pruning &nbsp;`prune_model.py`
 
 Performs an L1-unstructured pruning grid search across sparsity ratios from 10% to 90%. For each ratio it evaluates accuracy both **without** and **with** 3-epoch fine-tuning, then picks the best accuracy–sparsity tradeoff and saves that model.
 
@@ -83,7 +72,7 @@ python prune_model.py
 
 ---
 
-### Step 2 — INT8 Static Quantization &nbsp;`quantize_model.py`
+### Step 2 - INT8 Static Quantization &nbsp;`quantize_model.py`
 
 Applies FX-Graph-based post-training static quantization using the `qnnpack` backend. A small calibration subset from the training split is used to compute activation ranges before conversion to INT8.
 
@@ -96,7 +85,7 @@ python quantize_model.py
 
 ---
 
-### Step 3 — Structural (Channel) Pruning &nbsp;`struct_prune_model.py`
+### Step 3 - Structural (Channel) Pruning &nbsp;`struct_prune_model.py`
 
 Uses `torch-pruning` (`MagnitudePruner`) to physically remove entire channels/filters from the network at ratios from 10% to 90%. Unlike unstructured pruning, the model architecture itself shrinks, giving real reductions in both parameter count and inference FLOPs.
 
@@ -111,7 +100,7 @@ python struct_prune_model.py
 
 ---
 
-### Step 4 — Unified Evaluation &nbsp;`evaluate_model.py`
+### Step 4 - Unified Evaluation &nbsp;`evaluate_model.py`
 
 Loads all six model variants (original, quantized, two unstructured pruned, two structurally pruned) and runs them through the held-out validation set. Reports accuracy, precision, recall, F1, inference time, model size, parameter count, and weight sparsity for every variant.
 
@@ -126,9 +115,6 @@ python evaluate_model.py
 - `evaluation_results.log` — timestamped log of every run
 
 ---
-
-
-
 
 ## Dataset Split Format
 
@@ -147,4 +133,4 @@ python evaluate_model.py
 }
 ```
 
-Labels are inferred from the file path — any path containing the substring `not_attentive` is assigned label `0`; all others are assigned label `1`.
+Labels are inferred from the file path - any path containing the substring `not_attentive` is assigned label `0`; all others are assigned label `1`.
