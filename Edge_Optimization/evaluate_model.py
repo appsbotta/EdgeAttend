@@ -109,9 +109,8 @@ def evaluate_model(model, data_loader, device, model_name, model_path):
     all_labels = []
     all_preds = []
     
-    start_time = time.time()
-    progress_bar = tqdm(data_loader, desc=f"Evaluating {model_name}")
-    
+    # 1. Evaluate accuracy on the dataset
+    progress_bar = tqdm(data_loader, desc=f"Evaluating {model_name} Accuracy")
     with torch.no_grad():
         for images, labels in progress_bar:
             images = images.to(device)
@@ -127,7 +126,26 @@ def evaluate_model(model, data_loader, device, model_name, model_path):
             all_labels.extend(labels.numpy().ravel())
             all_preds.extend(preds)
             
-    inference_time = time.time() - start_time
+    # 2. Single-Image Inference Speed Measurement
+    # Create a dummy image tensor with batch size 1
+    dummy_input = torch.randn(1, 3, 160, 160).to(device)
+    
+    with torch.no_grad():
+        # WARM-UP: Run the model a few times to initialize CPU cache and memory allocators
+        for _ in range(50):
+            model(dummy_input)
+            
+        # MEASUREMENT: Run the model multiple times to get a stable average
+        num_iterations = 100
+        start_time = time.perf_counter() # perf_counter is highly precise
+        
+        for _ in range(num_iterations):
+            model(dummy_input)
+            
+        end_time = time.perf_counter()
+    
+    # Calculate average time in milliseconds
+    single_image_ms = ((end_time - start_time) / num_iterations) * 1000.0
     
     file_size_mb = os.path.getsize(model_path) / (1024 * 1024) if os.path.exists(model_path) else 0.0
     sparsity = measure_sparsity(model)
@@ -143,14 +161,13 @@ def evaluate_model(model, data_loader, device, model_name, model_path):
         "precision": float(prec),
         "recall": float(rec),
         "f1_score": float(f1),
-        "inference_time_seconds": float(inference_time),
+        "single_image_inference_ms": float(single_image_ms),
         "model_size_mb": float(file_size_mb),
         "total_parameters": int(total_params),
-        "sparsity_percent": float(sparsity)
     }
     
     logging.info(f"Results for {model_name}: {metrics}")
-    print(f"  Acc: {acc:.4f} | Size: {file_size_mb:.2f} MB | Params: {total_params:,} | Sparsity: {sparsity:.2f}%")
+    print(f"  Acc: {acc:.4f} | Speed: {single_image_ms:.2f} ms/img | Size: {file_size_mb:.2f} MB | Params: {total_params:,} ")
     return metrics
 
 def main():
