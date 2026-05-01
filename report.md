@@ -606,13 +606,14 @@ To reduce prediction noise from single-frame inference:
 
 ### Screenshots of outputs
 
-![Unstructured pruning trade-off](plots/unstructured_pruning_tradeoff_graph.png)
+![Unstructured pruning trade-off](plots/all_attentive.png)
 
-![Unstructured pruning trade-off](plots/unstructured_pruning_tradeoff_graph.png)
+![Unstructured pruning trade-off](plots/all_non_attentive.png)
 
-![Unstructured pruning trade-off](plots/unstructured_pruning_tradeoff_graph.png)
+![Unstructured pruning trade-off](plots/one_non_attentive.png)
 
-![Unstructured pruning trade-off](plots/unstructured_pruning_tradeoff_graph.png)
+![Unstructured pruning trade-off](plots/two_attentive.png)
+
 ---
 
 ## 9. Conclusions & Limitations
