@@ -1,13 +1,8 @@
-# Edge AI Course – Project Report Submission Format
-
-a `report.md` file with the following sections:
-
----
-## 1. Problem Statement, Motivation & Objectives (1–2 paragraphs + 3–5 bullets)
+## 1. Problem Statement, Motivation & Objectives
 
 ### Problem Statement
 
-Remote and hybrid work environments have become ubiquitous, yet existing meeting room monitoring systems face critical limitations. Traditional cloud-based solutions introduce unacceptable latency (500+ ms), depend on unstable internet connectivity, and create privacy concerns by uploading raw video to external servers. Meeting facilitators lack real-time visibility into participant engagement, making it impossible to identify disengaged individuals promptly and adapt interactions accordingly. Existing on-device solutions either require expensive specialized hardware (edge TPUs, GPUs) or sacrifice accuracy for speed, leaving a gap between research-grade models and practical edge deployments.
+Remote and hybrid work environments have become popular, yet existing meeting room monitoring systems face critical limitations. Traditional cloud-based solutions introduce unacceptable latency (500+ ms), depend on unstable internet connectivity, and create privacy concerns by uploading raw video to external servers. Meeting facilitators lack real-time visibility into participant engagement, making it impossible to identify disengaged individuals promptly and adapt interactions accordingly. Existing on-device solutions either require expensive specialized hardware (edge TPUs, GPUs) or sacrifice accuracy for speed, leaving a gap between research-grade models and practical edge deployments.
 
 ### Motivation & Relevance
 
@@ -40,21 +35,21 @@ The proposed solution implements a **distributed edge AI system** for real-time 
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────────┐
-│                         DATA COLLECTION & PREPARATION                        │
+│                         DATA COLLECTION & PREPARATION                       │
 ├─────────────────────────────────────────────────────────────────────────────┤
-│  • DAiSEE public dataset: 10,000 balanced face images (5k attentive/5k not)  │
+│  • DAiSEE public dataset: 10,000 balanced face images (5k attentive/5k not) │
 │  • Preprocessing: Face detection → 160×160 crop → augmentation              │
-│  • Train/val/test split: 70%/15%/15% with stratification (seed=42)         │
+│  • Train/val/test split: 70%/15%/15% with stratification (seed=42)          │
 └─────────────────────────────────────────────────────────────────────────────┘
                                      ↓
 ┌─────────────────────────────────────────────────────────────────────────────┐
-│                    MODEL TRAINING & OPTIMIZATION                             │
+│                    MODEL TRAINING & OPTIMIZATION                            │
 ├─────────────────────────────────────────────────────────────────────────────┤
-│  • Architecture: MobileNetV2 backbone + lightweight custom head              │
+│  • Architecture: MobileNetV2 backbone + lightweight custom head             │
 │  • Training: 2-stage strategy (head-only 10 epochs, fine-tune 10 epochs)    │
-│  • Evaluation: 98.53% accuracy, 100% recall, 0.9983 ROC-AUC                │
+│  • Evaluation: 98.53% accuracy, 100% recall, 0.9983 ROC-AUC                 │
 │  • Compression: INT8 quantization (3.4× speedup, 0.06% accuracy loss)       │
-│  • Result: 2.57 MB model, 21.7 ms per-frame inference                      │
+│  • Result: 2.57 MB model, 21.7 ms per-frame inference                       │
 └─────────────────────────────────────────────────────────────────────────────┘
                                      ↓
 ┌─────────────────────────────────────────────────────────────────────────────┐
@@ -80,11 +75,11 @@ The proposed solution implements a **distributed edge AI system** for real-time 
 ┌─────────────────────────────────────────────────────────────────────────────┐
 │                    OUTPUT & REAL-TIME FEEDBACK                              │
 ├─────────────────────────────────────────────────────────────────────────────┤
-│  • Client Display: Local webcam + mood overlay + shared meeting grid         │
-│  • Server Display: Annotated grid window + MJPEG browser stream              │
+│  • Client Display: Local webcam + mood overlay + shared meeting grid        │
+│  • Server Display: Annotated grid window + MJPEG browser stream             │
 │  • Status Panel: Participant count, timestamp, per-client mood status       │
-│  • Latency: 170–200 ms end-to-end (imperceptible to users)                 │
-│  • Privacy: No raw video on server; only mood metadata logged/visualized     │
+│  • Latency: 170–200 ms end-to-end (imperceptible to users)                  │
+│  • Privacy: No raw video on server; only mood metadata logged/visualized    │
 └─────────────────────────────────────────────────────────────────────────────┘
 ```
 
@@ -132,13 +127,6 @@ The following Python packages are required for both client and server deployment
 | **scikit-learn** | 1.0+ | Data splitting, metrics, evaluation |
 | **tqdm** | 4.62+ | Progress bars for loops |
 | **matplotlib** | 3.4+ | Visualization and plotting |
-
-**Installation**:
-```bash
-pip install numpy pandas opencv-python Pillow torch torchvision torch-pruning scikit-learn tqdm matplotlib
-```
-
-
 ---
 
 ## 4. Data Collection & Dataset Preparation
