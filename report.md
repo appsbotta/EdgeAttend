@@ -90,6 +90,8 @@ a `report.md` file with the following sections:
 - Resize to 160×160
 - Normalization only (ImageNet statistics)
 
+--- 
+
 ## 5. Model Design, Training & Evaluation
 
 ### Model Architecture: AttentiveMobileNetV2
@@ -387,8 +389,12 @@ Among the compression methods tested, **INT8 quantization is the best choice ove
 ---
 
 ## 10. Future Work
-- Possible improvements or extensions  
-- Ideas for scaling or real-world deployment  
+
+This project can be extended to improve performance and robustness in real-world scenarios.
+
+One key improvement is the introduction of parallel processing at the server side. Currently, the server processes client data sequentially, which can introduce delays as the number of clients increases. By enabling parallel or asynchronous handling of multiple client streams, the server can process incoming data more efficiently and send aggregated data frames back to clients faster, thereby reducing overall latency and improving real-time performance.
+
+Another important extension is the integration of multimodal inputs, such as eye gaze tracking, head pose estimation, and facial micro-expressions. These additional cues can enhance the accuracy and robustness of attentiveness detection, especially in situations where facial features alone are not sufficient.
 
 ---
 
@@ -400,6 +406,5 @@ Among the compression methods tested, **INT8 quantization is the best choice ove
 ---
 
 ## 12. References
-- List all resources used:
-  - papers, tutorials, documentation, datasets  
+[1] A Gupta, A DCunha, K Awasthi, V Balasubramanian, DAiSEE: Towards User Engagement Recognition in the Wild, arXiv preprint: arXiv:1609.01885
 
