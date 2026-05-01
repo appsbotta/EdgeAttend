@@ -446,12 +446,14 @@ Structural pruning gives the smallest model footprint in the project, but it los
 #### Unstructured pruning trade-off
 
 ![Unstructured pruning trade-off](plots/unstructured_pruning_tradeoff_graph.png)
+*Figure 3: unstructured pruning tradeoff graph*
 
 The graph shows that pruning without fine-tuning quickly collapses validation accuracy, especially after the 30% pruning range. Fine-tuning keeps the curve close to the baseline, which confirms that recovery training is necessary for this technique.
 
 #### Structural pruning trade-off
 
 ![Structural pruning trade-off](plots/struct_pruning_tradeoff_graph.png)
+*Figure 4: struct pruning tradeoff graph*
 
 The graph shows a sharper dependency on fine-tuning for structural pruning as well. Without recovery training, the model can fall close to chance performance at heavier pruning ratios. With fine-tuning, accuracy remains high across the tested ratios, but the best deployment benefit still depends on whether the application prioritizes size or speed.
 
@@ -609,12 +611,16 @@ To reduce prediction noise from single-frame inference:
 ### Screenshots of outputs
 
 ![all_attentive](plots/all_attentive.png)
+*Figure 6: All Attentive*
 
 ![all_non_attentive](plots/all_non_attentive.png)
+*Figure 7: All Non-Attentive*
 
 ![one_non_attentive](plots/one_non_attentive.png)
+*Figure 8: One Non Attentive*
 
 ![two_attentive](plots/two_attentive.png)
+*Figure 9: One Non Attentive*
 
 ---
 
