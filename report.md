@@ -29,7 +29,7 @@ a `report.md` file with the following sections:
 
 ### Data Source
 - **Dataset**: DAiSEE (Dataset for Engagement Estimation in Education)
-- **Location**: [DAiSEE Dataset](https://people.iith.ac.in/vineethnb/resources/daisee/index.html)
+- **Source**: [DAiSEE Dataset](https://people.iith.ac.in/vineethnb/resources/daisee/index.html)
 - **Directory Structure**:
   ```
   DAiSEE/
@@ -277,7 +277,7 @@ The compression stage was implemented through three paths in this folder:
 | Model variant | Accuracy | Inference metric | Model size | Parameters | Remark |
 | --- | ---: | ---: | ---: | ---: | --- |
 | Original FP32 | 98.53% | 22.68 ms per image | 9.02 MB | 2,305,921 | Baseline reference |
-| Quantized INT8 | 98.47% | 5.87 ms per image | 2.57 MB | 0 in TorchScript export | Best overall deployment balance |
+| Quantized INT8 | 98.47% | 5.87 ms per image | 2.57 MB | 2,305,921 | Best overall deployment balance |
 | Unstructured pruned, no fine-tuning | 78.53% | 9.85 s total CPU eval time | 9.04 MB | 2,305,921 | Large accuracy loss without recovery training |
 | Unstructured pruned, with fine-tuning | 98.40% | 7.76 s total CPU eval time | 9.04 MB | 2,305,921 | Accuracy recovered, but storage savings remain weak |
 | Structurally pruned, no fine-tuning | 50.00% | 2.50 s total CPU eval time | 0.27 MB | 30,477 | Extreme compression, but accuracy collapses without recovery training |
