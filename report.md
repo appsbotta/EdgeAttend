@@ -469,15 +469,15 @@ Among the compression methods tested, **INT8 quantization is the best choice ove
 
 ---
 
-### 7.1 Deployment Architecture Overview
+### Deployment Architecture Overview
 
 The attentiveness detection system employs a **distributed edge AI architecture** where inference is performed locally on client devices, eliminating the need for cloud communication while maintaining real-time responsiveness. The deployment follows a server-client topology optimized for low-latency, privacy-preserving on-device execution.
 
 
-### 7.3 Deployment Steps
+### Deployment Steps
 
 #### Step 1: Model Conversion & Packaging
-The trained PyTorch model (`attentive_model.pth`) is packaged as a state dictionary containing only model weights, eliminating unnecessary metadata and reducing file size. The model is loaded directly without conversion to TensorFlow Lite, leveraging PyTorch's native CPU inference capabilities.
+The trained PyTorch model (`attentive_model_quantized.pth`) is packaged as a state dictionary containing only model weights, eliminating unnecessary metadata and reducing file size. The model is loaded directly without conversion to TensorFlow Lite, leveraging PyTorch's native CPU inference capabilities.
 
 **Key Design Choice:** PyTorch's CPU inference provides sufficient real-time performance (batch inference over 5 frames) while maintaining full model fidelity without quantization artifacts.
 
@@ -511,7 +511,7 @@ Each client runs three concurrent threads:
 - **Receiver thread**: Listens for incoming grid broadcasts
 - **Display thread**: Renders client's own camera feed with overlay showing personal mood status + shared meeting room grid
 
-### 7.4 On-Device Performance Metrics
+### On-Device Performance Metrics
 
 #### Inference Time Analysis (Client-Side)
 
@@ -562,7 +562,7 @@ Frame 10 (t=663ms)       → Next batch inference cycle
 - **MJPEG encoding**: ~8–12 ms per frame @ 8 FPS
 - **Concurrent client support**: Tested with 8+ simultaneous clients
 
-### 7.5 Real-Time Behavior & Latency Budget
+### Real-Time Behavior & Latency Budget
 
 #### End-to-End Latency Breakdown
 | Component | Latency |
@@ -586,7 +586,7 @@ To reduce prediction noise from single-frame inference:
 - **Result**: Smoother mood transitions, fewer false positives
 
 
-### 7.7 Deployment Reliability & Fallbacks
+### Deployment Reliability & Fallbacks
 
 - **Model load failure**: Client gracefully defaults to "Loading..." → "Non-Attentive" if model unavailable
 - **Face detection failure**: Returns "Non-Attentive" with score 0.0
@@ -607,7 +607,7 @@ To reduce prediction noise from single-frame inference:
 
 ## 9. Conclusions & Limitations
 
-### 9.1 Key Outcomes Achieved
+### Key Outcomes Achieved
 
 This project successfully demonstrates a **practical edge AI system for real-time attentiveness detection** in distributed meeting room environments. The following major milestones were accomplished:
 
@@ -634,7 +634,7 @@ This project successfully demonstrates a **practical edge AI system for real-tim
 - **Server aggregates only metadata** (mood labels, scores) for visualization
 - **Eliminates dependency on cloud infrastructure**, reducing latency and privacy concerns
 
-### 9.2 Limitations (Updated for Consistency)
+### Limitations (Updated for Consistency)
 
 #### Dataset Limitations
 1. **Fixed Dataset Size (10,000 samples)** – Limited to DAiSEE; poor generalization to different demographics
@@ -671,7 +671,7 @@ Another important extension is the integration of multimodal inputs, such as eye
 
 ## 11. Challenges & Mitigation
 
-### 11.1 Data & Preprocessing Challenges
+### Data & Preprocessing Challenges
 
 #### Challenge 1: Limited Dataset Size (10,000 samples)
 **Problem**: DAiSEE dataset constrained to 10,000 face images; deep learning models typically benefit from 100k+ samples.
@@ -710,7 +710,7 @@ Another important extension is the integration of multimodal inputs, such as eye
 - Dropped frames with no detected face rather than introducing artifacts
 - Result: ~85% of raw frames successfully yielded usable face crops for dataset
 
-### 11.2 Model Architecture & Training Challenges
+### Model Architecture & Training Challenges
 
 #### Challenge 4: Balancing Model Size vs. Accuracy
 **Problem**: Standard ResNet-50 or EfficientNet models (50–100 MB) too large for edge deployment; simpler CNNs (< 1 MB) sacrifice accuracy.
@@ -741,7 +741,7 @@ Another important extension is the integration of multimodal inputs, such as eye
 - Used **early stopping** with patience=4 epochs to halt training before performance degraded
 - Achieved **98.27% test accuracy**, only 0.26% below validation accuracy—minimal overfitting
 
-### 11.3 Model Compression & Optimization Challenges
+### Model Compression & Optimization Challenges
 
 #### Challenge 6: Inference Latency Too High for Real-Time Deployment
 **Problem**: Original FP32 model required 11.07 seconds to run inference on 150 test frames (~74 ms/frame); unacceptable for 15 FPS frame capture.
@@ -761,7 +761,7 @@ Another important extension is the integration of multimodal inputs, such as eye
 - Calibration subset extracted from training split to estimate activation ranges
 - Result: **Deployment viable on standard CPU**, no GPU required
 
-### 11.4 Real-Time System Architecture Challenges
+### Real-Time System Architecture Challenges
 
 #### Challenge 7: Concurrent Client Management
 **Problem**: Naive sequential processing of multiple client streams causes cascading delays and client timeouts.
@@ -812,7 +812,7 @@ Another important extension is the integration of multimodal inputs, such as eye
 - Frame buffer implemented as `deque(maxlen=BATCH_SIZE)` with atomic append
 - Result: **3 FPS effective inference rate** with **smoothed predictions** (reduced false positives from noisy single frames)
 
-### 11.5 Hardware & Network Challenges
+### Hardware & Network Challenges
 
 #### Challenge 10: Webcam Availability & Initialization
 **Problem**: Not all systems have accessible webcams; initialization timing varies across hardware.
@@ -849,7 +849,7 @@ Another important extension is the integration of multimodal inputs, such as eye
   - No orphaned threads or socket handles
 - Result: **Graceful degradation** on network issues; clean recovery on reconnect
 
-### 11.6 Debugging & Testing Challenges (Maintained)
+### Debugging & Testing Challenges (Maintained)
 
 #### Challenge 12–14: Multi-threaded Debugging, Inference Variability, Limited Test Set
 *(Refer to full section 11.6 above for comprehensive mitigation strategies)*
