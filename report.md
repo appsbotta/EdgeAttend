@@ -212,13 +212,13 @@ True   Attentive   TP   |      FN
 
 #### Training Curves
 
-![Training Loss](plots/loss.png)
+![Training Loss](plots/loss.png)\
 *Figure 1: Training vs Validation Loss over 20 epochs*
 
-![Training Accuracy](plots/accuracy.png)
+![Training Accuracy](plots/accuracy.png)\
 *Figure 2: Training vs Validation Accuracy over 20 epochs*
 
-![Training AUC](plots/auc.png)
+![Training AUC](plots/auc.png)\
 *Figure 3: Training vs Validation AUC over 20 epochs*
 
 <!-- #### Expected Performance Range
