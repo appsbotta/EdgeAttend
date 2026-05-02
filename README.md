@@ -34,8 +34,8 @@ EdgeAttend/
 │   ├── unstructured_pruning_tradeoff_graph.png
 │   ├── all_attentive.png
 │   ├── all_non_attentive.png
-│   ├── one_non_attentive.png
-│   └── two_attentive.png 
+│   └── one_non_attentive.png
+│  
 │   
 │
 ├── Training/                        # Data preparation and model training
