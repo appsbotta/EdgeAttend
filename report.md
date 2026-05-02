@@ -547,7 +547,7 @@ To reduce prediction noise from single-frame inference:
 This project successfully demonstrates a **practical edge AI system for real-time attentiveness detection** in distributed meeting room environments. The following major milestones were accomplished:
 
 #### Model Performance
-- **Attained 98.53% test accuracy** using MobileNetV2 transfer learning on the DAiSEE dataset (10,000 balanced samples)
+- **Attained 98.27% test accuracy** using MobileNetV2 transfer learning on the DAiSEE dataset (10,000 balanced samples)
 - **Perfect recall (100%)** for attentive class, no missed detections of engaged participants
 
 #### Model Optimization
