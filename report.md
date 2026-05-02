@@ -603,4 +603,4 @@ Another important extension is the integration of multimodal inputs, such as eye
 
 ## 12. References
 [1] A Gupta, A DCunha, K Awasthi, V Balasubramanian, DAiSEE: Towards User Engagement Recognition in the Wild, arXiv preprint: arXiv:1609.01885
-
+[2] AI-based tools (Gemini and ChatGPT) were used to assist in certain parts of the implementation, including structured pruning techniques, visualization design, and data preprocessing and resolving implementation errors. All outputs were reviewed and validated by us.
