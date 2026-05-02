@@ -522,7 +522,7 @@ To reduce prediction noise from single-frame inference:
 ## 8. System Prototype 
  
 - Hardware Setup - Laptop (Multiple for server and clients)
-- Working Prototype - https://
+- [Working Prototype](https://drive.google.com/file/d/1OrYBnVFEIoRykKdxpj0wWBbnSqfuKUvb/view?usp=drive_link)
 
 ### Screenshots of outputs
 
