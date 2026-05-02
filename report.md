@@ -529,14 +529,16 @@ To reduce prediction noise from single-frame inference:
 ![all_attentive](plots/all_attentive.png)
 *Figure 6: All Attentive*
 
+
+
 ![all_non_attentive](plots/all_non_attentive.png)
 *Figure 7: All Non-Attentive*
+
+
 
 ![one_non_attentive](plots/one_non_attentive.png)
 *Figure 8: One Non Attentive*
 
-![two_attentive](plots/two_attentive.png)
-*Figure 9: Two Attentive*
 
 ---
 
