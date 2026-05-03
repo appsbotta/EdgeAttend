@@ -4,6 +4,8 @@
 
 EdgeAttend detects whether each participant in a video call is attentive or not, entirely on the client device. A MobileNetV2-based binary classifier runs locally on every client machine. A lightweight server aggregates the results, assembles a shared grid view, and streams it back to all participants and to a browser-based monitor.
 
+This project was developed as a part of [Edge AI course](https://www.samy101.com/edge-ai-26/) at Indian Institute of Science, Bengaluru. 
+
 ---
 
 ## Table of Contents
